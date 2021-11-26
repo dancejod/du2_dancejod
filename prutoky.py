@@ -6,17 +6,21 @@ with open ("sample_vstup.csv", encoding="utf-8") as csvinfile, open("sample_vyst
 
     zasobnik = []
     cislo_riadku = 0
+    prvy_riadok = 1
 
     for riadok in reader:
         cislo_riadku += 1 
         priemer = 0
-        if cislo_riadku % 7 == 1:
-            writer.writerow([riadok])
-            zasobnik.clear()
-        else:
-            zasobnik.append(riadok[5])
-            if len(zasobnik) == 7:
-                priemer = sum(zasobnik)
-                riadok[5] = priemer
+        if cislo_riadku % 7 == 1 or cislo_riadku == 1:
+            prvy_riadok = riadok
 
-    print(zasobnik)
+        zasobnik.append(float(riadok[5]))
+           
+        if len(zasobnik) == 7:
+            print(zasobnik)
+            priemer = round((sum(zasobnik)),4)
+            prvy_riadok[5] = priemer
+            writer.writerow([prvy_riadok])
+            zasobnik.clear()        
+        #else:
+            
