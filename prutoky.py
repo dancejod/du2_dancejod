@@ -1,14 +1,18 @@
 import csv
 
-with open ("sample_vstup.csv", encoding="utf-8") as csvinfile, open("sample_vystup.csv","w", encoding="utf-8", newline="") as csvoutfile:
-    reader = csv.reader(csvinfile, delimiter = ",")
-    writer = csv.writer(csvoutfile)
+with open ("vstup.csv", encoding="utf-8") as vstup, open("sample_vystup.csv","w", encoding="utf-8", newline="") as tyzdnovy_vystup, open("sample_rocny_vystup.csv","w", encoding="utf-8", newline="") as rocny_vystup:
+    reader = csv.reader(vstup, delimiter = ",")
+    writer_7 = csv.writer(tyzdnovy_vystup)
+    writer_365 = csv.writer(rocny_vystup)
 
     zasobnik = []                          ### Zasobnik, do ktoreho sa volaju priemery v priebehu 7 dni
     cislo_riadku = 0                       ### Pocitadlo riadkov, pomaha si s premennou prvy_riadok
     prvy_riadok = 1                        ### Premenna, ktora zaistuje, ze sa do riadka ulozi prvy den z kazdeho tyzdna
     priemer = 0                        
     
+    # 7 dni
+
+    '''''
     for riadok in reader:
         cislo_riadku += 1 
         
@@ -20,12 +24,46 @@ with open ("sample_vstup.csv", encoding="utf-8") as csvinfile, open("sample_vyst
         if len(zasobnik) == 7:
             priemer = (sum(zasobnik))/len(zasobnik)
             prvy_riadok[5] = ("{0:.4f}".format(priemer))        ### Zaistuje vypisanie priemerov na 4 desatinne miesta
-            writer.writerow(prvy_riadok)
+            writer_7.writerow(prvy_riadok)
             zasobnik.clear()                    ### Vyprazdnenie zasobnika po vypocitani priemeru z tyzdna
 
     if len(zasobnik) != 0:                      ### Pokial vstup nie je delitelny 7, vypriemeruje sa zvysok zasobnika a prida sa k prvemu dnu nasledujuceho tyzdna
-        print(zasobnik)
         priemer = (sum(zasobnik))/len(zasobnik) 
         prvy_riadok[5] = ("{0:.4f}".format(priemer))       
-        writer.writerow(prvy_riadok)
+        writer_7.writerow(prvy_riadok)
+        zasobnik.clear()
+    
+    '''
+
+    # Rocny priemer
+
+    prvy_riadok_roku = 1
+    aktualny_rok = 0
+    Prvy_den = 0
+    Prvy_mesiac = 0
+
+    for riadok in reader:
+
+        if aktualny_rok == 0:
+            aktualny_rok = int(riadok[2])
+            Prvy_mesiac = int(riadok[3])
+            Prvy_den = int(riadok[4])
+        
+        if prvy_riadok_roku == 1:
+            prvy_riadok_roku = riadok            ### 
+
+        if aktualny_rok == int(riadok[2]):
+            zasobnik.append(float(riadok[5]))
+
+        if int(riadok[2]) != aktualny_rok and int(riadok[3]) == Prvy_mesiac and int(riadok[4]) == Prvy_den:
+            priemer = (sum(zasobnik))/len(zasobnik)
+            prvy_riadok_roku[5] = ("{0:.4f}".format(priemer))        ### 
+            writer_365.writerow(prvy_riadok_roku)
+            aktualny_rok = int(riadok[2])        
+            prvy_riadok_roku = riadok
+
+    if len(zasobnik) != 0:                      ### 
+        priemer = (sum(zasobnik))/len(zasobnik) 
+        prvy_riadok_roku[5] = ("{0:.4f}".format(priemer))       
+        writer_365.writerow(prvy_riadok_roku)
         zasobnik.clear()
