@@ -1,6 +1,6 @@
 import csv
 
-with open ("vstup.csv", encoding="utf-8") as vstup, open("vystup_7dni.csv","w", encoding="utf-8", newline="") as tyzdnovy_vystup, open("vystup_rok.csv","w", encoding="utf-8", newline="") as rocny_vystup:
+with open ("sample_vstup.csv", encoding="utf-8") as vstup, open("vystup_7dni.csv","w", encoding="utf-8", newline="") as tyzdnovy_vystup, open("vystup_rok.csv","w", encoding="utf-8", newline="") as rocny_vystup:
     reader = csv.reader(vstup, delimiter = ",")
     writer_7 = csv.writer(tyzdnovy_vystup)
     writer_365 = csv.writer(rocny_vystup)
@@ -19,8 +19,8 @@ with open ("vstup.csv", encoding="utf-8") as vstup, open("vystup_7dni.csv","w", 
     for riadok in reader:
             
         if len(riadok) != 6:
-            raise Exception("Vstupne data nemaju pozadovany pocet stlpcov (6)")
-        
+            raise Exception("POZOR: Vstupne data nemaju pozadovany pocet stlpcov (6)")
+
         cislo_riadku += 1
 
         if max_prietok == 0 and min_prietok == 0:   ### Priprava slice riadku do premennych
